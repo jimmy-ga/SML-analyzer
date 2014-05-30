@@ -2,14 +2,11 @@ $indice = 0
 class Lector
 	@@abc = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 	@@lista_ns = ['1','2','3','4','5','6','7','8','9','0','+','-','/','*']
+	
 	def initialize(lista,str) #constructor que tiene el codigo y lista con variables
 		@lista = lista
 		@str = str
 	end
-
-	def quita_espacios()
-	end
-
 
 	def self.buscar_n(str)
 		for i in @@lista_ns
@@ -42,9 +39,25 @@ class Lector
 	end
 
 	def encuentra_tuplas_listas(codigo,variable)
+		num_parentesis = 0
+		if codigo[$indice] == '[' or codigo[$indice] == '('
+			num_parentesis = num_parentesis + 1
+		end
 		variable = variable + codigo[$indice]
 		$indice = $indice + 1
 		while codigo[$indice]!="]" and codigo[$indice]!= ')' do #Concatena las listas y tuplas
+			if codigo[$indice] == '[' or codigo[$indice] == '('
+				num_parentesis = num_parentesis + 1
+			end
+			variable = variable + codigo[$indice]
+			$indice = $indice + 1
+		end
+		while num_parentesis > 0 do
+			if codigo[$indice] == ']' or codigo[$indice] == ')'
+				num_parentesis = num_parentesis - 1
+			elsif codigo[$indice] == '[' or codigo[$indice] == '('
+				num_parentesis = num_parentesis + 1
+			end
 			variable = variable + codigo[$indice]
 			$indice = $indice + 1
 		end
@@ -113,5 +126,5 @@ class Separador
 end
 
 #Es un ejemplo de codigo => "fun x(lista:int list) = var x = 9 var y = 10"
-a = Lector.new(["Estas son la variables"],"fun x(lista:int list) = \n var r = 5 + 2.8989 /34 -099676 + 576567 \nvar largo_lisp = (5,6) let if x == 1 end var y = 'Hola mundo' var z = True var n = [1,2,3] if x>3")
+a = Lector.new(["Estas son la variables"],"fun x(lista:int list) = var r = 5 + 2.8989 /34 -099676 + 576567 var largo_lisp = (((5,6),(987,354)),((76,32),(5654,456))) let if x == 1 end var y = 'Hola mundo' var z = True var n = [1,2,3] if x>3")
 a.busca_variables()

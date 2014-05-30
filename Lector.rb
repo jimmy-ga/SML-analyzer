@@ -113,5 +113,5 @@ class Separador
 end
 
 #Es un ejemplo de codigo => "fun x(lista:int list) = var x = 9 var y = 10"
-a = Lector.new(["Estas son la variables"],"fun x(lista:int list) = \n var r=5+ 2.8989 /34 \nvar largo_lisp = (5,6) let if x == 1 end var y = 'Hola mundo' var z = True var n = [1,2,3] if x>3")
+a = Lector.new(["Estas son la variables"],"fun x(lista:int list) = \n var r = 5 + 2.8989 /34 -099676 + 576567 \nvar largo_lisp = (5,6) let if x == 1 end var y = 'Hola mundo' var z = True var n = [1,2,3] if x>3")
 a.busca_variables()

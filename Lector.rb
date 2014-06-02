@@ -2,10 +2,28 @@ $indice = 0
 class Lector
 	@@abc = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 	@@lista_ns = ['1','2','3','4','5','6','7','8','9','0','+','-','/','*']
+	@@lista_var = []
 	
 	def initialize(lista,str) #constructor que tiene el codigo y lista con variables
 		@lista = lista
 		@str = str
+	end
+
+	def self.concatena_var(codigo,res)
+		if codigo[0] == " "
+			return res
+		else
+			return Lector.concatena_var(codigo.slice(1..codigo.length),res+codigo[0])
+		end
+	end
+
+	def self.buscar_var(str)
+		for i in @@lista_var
+			if str==i
+				return true
+			end
+		end
+		false
 	end
 
 	def self.buscar_n(str)
@@ -47,7 +65,7 @@ class Lector
 		$indice = $indice + 1
 		while codigo[$indice]!="]" and codigo[$indice]!= ')' do #Concatena las listas y tuplas
 			if codigo[$indice] == '[' or codigo[$indice] == '('
-				num_parentesis = num_parentesis + 1
+				num_parentesis = num_parentesis + 1 
 			end
 			variable = variable + codigo[$indice]
 			$indice = $indice + 1
@@ -67,9 +85,17 @@ class Lector
 	end
 
 	def encuentra_int_float(codigo,variable)
-		while not Lector.buscar_abc(codigo[$indice]) do
+		copia = codigo
+		vf = false
+		x = Lector.concatena_var(copia,"")
+		while (not Lector.buscar_abc(codigo[$indice])) or vf do
 			variable = variable + codigo[$indice]
 			$indice = $indice + 1
+			x = Lector.concatena_var(copia[$indice..copia.length],"")
+			vf = false
+			if Lector.buscar_var(x)
+				vf = true
+			end
 		end
 		variable
 	end
@@ -79,7 +105,9 @@ class Lector
 		variable = '' #aqui se almacena la varible temporalmente para despues meterla a la lista
 		largo_str = codigo.length #largo del codigo restante
 		while largo_str > 0 and codigo.index('var') do  #codigo.index determina si existe el string "var", si existe devuelve el indice donde se encuentra, sino devuelve nil
-			$indice = codigo.index('var')					   #el primer while recorre todo el codigo en busca de var
+			$indice = codigo.index('var')				   #el primer while recorre todo el codigo en busca de var
+			copia = codigo
+			@@lista_var = @@lista_var + [Lector.concatena_var(copia.slice($indice+4..copia.length),"")] #agregar las variables a una lista
 			num_espacios = 0 #variable para determinar
 			while codigo[$indice] != nil and num_espacios < 4 do #este while va aumentando el indice y concatena hasta terminar de leer la variable
 				if codigo[$indice]=="'" or codigo[$indice]== '"' #Para encontrar los valores de los strings
@@ -113,6 +141,7 @@ class Lector
 			@lista = @lista + [variable] #concatena la variable con el resto de la lista
 			variable = '' #La variable se vuelve a poner vacia
 		end
+		#puts @@lista_var
 		puts @lista
 	end
 end
@@ -126,5 +155,5 @@ class Separador
 end
 
 #Es un ejemplo de codigo => "fun x(lista:int list) = var x = 9 var y = 10"
-a = Lector.new(["Estas son la variables"],"fun x(lista:int list) = var r = 5 + 2.8989 /34 -099676 + 576567 var largo_lisp = (((5,6),(987,354)),((76,32),(5654,456))) let if x == 1 end var y = 'Hola mundo' var z = True var n = [1,2,3] if x>3")
+a = Lector.new(["Estas son la variables"],"fun x(lista:int list) = var r = 5 + 2.8989 /34 -099676 + 576567 var largo_lisp = (((5,6),(987,354)),((76,32),(5654,456))) let if x == 1 end var y = 'Hola mundo' var er = 34 + r var z = True var n = [1,2,3] if x>3")
 a.busca_variables()

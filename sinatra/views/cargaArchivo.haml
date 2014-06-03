@@ -1,0 +1,89 @@
+!!!
+%html{lang: "en"}
+  %head
+    %meta{charset: "utf-8"}/
+    %meta{content: "IE=edge", "http-equiv" => "X-UA-Compatible"}/
+    %meta{content: "width=device-width, initial-scale=1.0", name: "viewport"}/
+    %meta{content: "", name: "description"}/
+    %meta{content: "", name: "author"}/
+    %link{href: "../../docs-assets/ico/favicon.png", rel: "shortcut icon"}/
+    %title Bienvenido a SML-Analizer
+    / Bootstrap core CSS
+    %link{href: "css/bootstrap.css", rel: "stylesheet"}/
+    / Custom styles for this template
+    %link{href: "css/main.css", rel: "stylesheet"}/
+    %script{src: "https://code.jquery.com/jquery-1.10.2.min.js"}
+    %script{src: "js/hover.zoom.js"}
+    %script{src: "js/hover.zoom.conf.js"}
+    / HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
+    /[if lt IE 9]
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+  %body
+    / Static navbar
+    .navbar.navbar-inverse.navbar-static-top
+      .container
+        .navbar-header
+          %button.navbar-toggle{"data-target" => ".navbar-collapse", "data-toggle" => "collapse", type: "button"}
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          %a.navbar-brand{href: "/"} SML-Analyzer
+        .navbar-collapse.collapse
+          %ul.nav.navbar-nav.navbar-right
+            %li
+              %a{href: "acerca"} Acerca de
+            %li
+              %a{href: "analizar"} Analizar
+        / /.nav-collapse
+    / +++++ Welcome Section +++++
+    #ww
+      .container
+        .row
+          .col-lg-8.col-lg-offset-2.centered 
+            %br/
+            %h1 Selecciona el archivo
+            %p Selecciona el archivo que desees evaluar
+            %form{:action=>"/analizar",:method=>"post"   ,:enctype=>"multipart/form-data"}
+              %span.btn.btn-file
+                %input{:type=>"file",:name=>"file"}
+                %br/
+                %input{:type=>"submit",:value=>"Upload"}
+            %br/
+            %br/
+            %br/
+          / /col-lg-8
+        / /row
+      / /container
+    / /ww
+    / +++++ Footer Section +++++
+    #footer
+      .container
+        .row
+          .col-lg-4
+            %h4 My Bunker
+            %p
+              Some Address 987,
+              %br/
+              +34 9054 5455,
+              %br/
+              Madrid, Spain.
+          / /col-lg-4
+          .col-lg-4
+            %h4 My Links
+            %p
+              %a{href: "#"} Dribbble
+              %br/
+              %a{href: "#"} Twitter
+              %br/
+              %a{href: "#"} Facebook
+          / /col-lg-4
+          .col-lg-4
+            %h4 Acerca de SML-Analyzer
+            %p SML-Analyzer es una aplicación web realizada en Ruby, que permite analizar archivos de SML y obtener los valores de los ambientes estáticos y dinámicos
+          / /col-lg-4
+    /
+      Bootstrap core JavaScript
+      \==================================================
+    / Placed at the end of the document so the pages load faster
+    %script{src: "js/bootstrap.min.js"}

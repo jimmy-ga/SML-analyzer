@@ -1,0 +1,1 @@
+val r = 5 + 2.8989 /34 - 099676 + 576567 val largo_lisp = (((5,6),(987,354)),((76,32),(5654,456))) let if x == 1 end val y = 'Hola mundo' val er = 34 + r val palabras = ['sfs','fsdof'] val letras = ['g','s','a'] val z = True val n = [1,2,3] if x>3

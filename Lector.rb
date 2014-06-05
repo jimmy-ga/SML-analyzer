@@ -3,7 +3,7 @@ class Lector
 	@@abc = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 	@@lista_ns = ['1','2','3','4','5','6','7','8','9','0','+','-','/','*']
 	@@lista_var = []
-	@@tabla_simbolos=[]
+	@@tabla_simbolos=[] #lista que contiene los valores finales evaluados
 	
 	def initialize(lista,str) #constructor que tiene el codigo y lista con variables
 		@lista = lista
@@ -148,7 +148,8 @@ class Lector
 		#pruebaTipos(convierteLista("5 + 2.8989 / 34 - 99676 + 576567"))
 		#pruebaTipos(convierteLista("34 + r"))
 	end
-	def splitear(valor)
+
+	def splitear(valor)#separa un string con expresiones matematicas y espacios y las devuelve sin estos(ej.: 3 +4* 5 devuelve 3+4*5)
 		salida=[]
 		temp=""
 		contador=0
@@ -166,8 +167,7 @@ class Lector
 		return salida
 	end
 
-	def convierteLista(valor)
-		#lista= "5 + 2.8989 / 34 - 99676 + 576567".split
+	def convierteLista(valor) #
 		lista= valor.delete " " #borra los espacios en blanco
 		#metodo para split manteniendo los caracteres
 		lista=splitear(lista)
@@ -196,7 +196,7 @@ class Lector
 		return listares
 	end
 	
-	def pruebaTipos(lista)
+	def pruebaTipos(lista)#resuelve las expresiones matematicas de un string (ej.: 3+2 retorna 5)
 		contador=0
 		#puts lista
 		while lista[contador].nil? ==false do
@@ -243,7 +243,7 @@ class Lector
 		end
 		
 	end
-	def ambientes(lista)
+	def ambientes(lista) #funcion principal para obtener los valorres dinamicos y estaticos
 		for i in lista
 			actual=i.split
 			if actual[0]=="val"

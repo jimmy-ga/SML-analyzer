@@ -2,6 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'haml' 
 
+set :bind, '0.0.0.0'
 #El index de la página
 get "/" do
 	haml :index

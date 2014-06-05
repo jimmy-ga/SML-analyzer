@@ -7,7 +7,7 @@ set :bind, '0.0.0.0'
 get "/" do
 	haml :index
 end
- 
+
 # Handle GET-request (Show the upload form)
 get "/analizar" do
   haml :cargaArchivo
@@ -30,6 +30,5 @@ post '/analizar' do
     # here you would write it to its final location
     STDERR.puts blk.inspect
   end
-
   return "el archivo "+name+" ha sido cargado exitosamente"
 end

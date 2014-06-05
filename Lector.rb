@@ -231,6 +231,18 @@ class Lector
 		return lista[0]
 	end
 
+	def get_tipo_lista(lista)
+		numeros= %w{1 2 3 4 5 6 7 8 9 0}
+		lista=lista.tr("[]","")
+		if  numeros.include?(lista[0])
+			return "Int list"
+		elsif lista[0].class==String and lista[0].length==1
+			return "Char list"
+		else
+			return "String list"
+		end
+		
+	end
 	def ambientes(lista)
 		for i in lista
 			actual=i.split
@@ -246,11 +258,35 @@ class Lector
 				#puts valor[0].class.to_s
 				if  numeros.include?(valor[0])
 					#puts "antes: "+valor.to_s
-					valor=pruebaTipos(convierteLista(valor))
-					#puts "despues: "+valor.to_s
+					valor=pruebaTipos(convierteLista(valor))					
+					#puts "despues: "+valor.to_s+valor.class.to_s
 				end
-				@@tabla_simbolos=@@tabla_simbolos+[[variable,valor]]
-				puts "Variable: "+variable+" Valor: "+valor.to_s
+				@@tabla_simbolos=[]
+				if valor.class==Fixnum
+						@@tabla_simbolos=@@tabla_simbolos+[[variable,valor,"Int"]]
+				elsif valor.class==Float
+						@@tabla_simbolos=@@tabla_simbolos+[[variable,valor,"Float"]]
+				#puts valor
+				elsif valor.class==String
+						valor=valor.downcase
+						if valor=="true" or valor=="false"
+							@@tabla_simbolos=@@tabla_simbolos+[[variable,valor,"Boolean"]]
+							#puts "Variable: "+variable+" Valor: "+valor.to_s+" Tipo: Boolean"
+						elsif valor.start_with? "(" and valor.end_with? ")"
+							@@tabla_simbolos=@@tabla_simbolos+[[variable,valor,"Tupla"]]
+							#puts "Variable: "+variable+" Valor: "+valor.to_s+" Tipo: Tupla"
+						elsif valor.start_with? "["
+							tipo_lista=get_tipo_lista(valor)
+							@@tabla_simbolos=@@tabla_simbolos+[[variable,valor,tipo_lista]]
+							#puts "Variable: "+variable+" Valor: "+valor.to_s+" Tipo: "+tipo_lista
+						end
+						#puts @@tabla_simbolos.to_s
+				end
+				for i in @@tabla_simbolos
+					puts "Variable: "+i[0].to_s+" Valor: "+i[1].to_s+" Tipo: "+i[2].to_s
+				end
+				#@@tabla_simbolos=@@tabla_simbolos+[[variable,valor]]
+				#	puts "Variable: "+variable+" Valor: "+valor.to_s+" Tipo: "+valor.class.to_s
 			end
 		end
 	end
@@ -265,5 +301,5 @@ class Separador
 end
 
 #Es un ejemplo de codigo => "fun x(lista:int list) = val x = 9 val y = 10"
-a = Lector.new(["Estas son la valiables"],"fun x(lista:int list) = val r = 5 + 2.8989 /34 - 099676 + 576567 val largo_lisp = (((5,6),(987,354)),((76,32),(5654,456))) let if x == 1 end val y = 'Hola mundo' val er = 34 + r val z = True val n = [1,2,3] if x>3")
+a = Lector.new(["Estas son la valiables"],"fun x(lista:int list) = val r = 5 + 2.8989 /34 - 099676 + 576567 val largo_lisp = (((5,6),(987,354)),((76,32),(5654,456))) let if x == 1 end val y = 'Hola mundo' val er = 34 + r val palabras = ['sfs','fsdof'] val letras = ['g','s','a'] val z = True val n = [1,2,3] if x>3")
 a.busca_variables()

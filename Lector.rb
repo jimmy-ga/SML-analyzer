@@ -102,8 +102,8 @@ class Lector
 		variable
 	end
 
-	def busca_variables() #Busca todas las variables de un codigo y las mete en el atributo lista
-		codigo = @str + "i " #@str es el codigo SML que contiene el objeto
+		def busca_variables() #Busca todas las variables de un codigo y las mete en el atributo lista
+		codigo = @str + " x <3"#@str es el codigo SML que contiene el objeto
 		variable = '' #aqui se almacena la varible temporalmente para despues meterla a la lista
 		largo_str = codigo.length #largo del codigo restante
 		while largo_str > 0 and codigo.index('val') do  #codigo.index determina si existe el string "var", si existe devuelve el indice donde se encuentra, sino devuelve nil
@@ -144,7 +144,7 @@ class Lector
 			variable = '' #La variable se vuelve a poner vacia
 		end
 		#puts @@lista_var
-		#@lista
+		#puts @lista
 		ambientes(@lista)
 		#pruebaTipos(convierteLista("5 + 2.8989 / 34 - 99676 + 576567"))
 		#pruebaTipos(convierteLista("34 + r"))
@@ -316,5 +316,5 @@ end
 
 #carga_archivo(2)
 #Es un ejemplo de codigo => "fun x(lista:int list) = val x = 9 val y = 10"
-a = Lector.new(["Estas son la valiables"],"val x = 4 + 5")#fun x(lista:int list) = val r = 5 + 2.8989 /34 - 099676 + 576567 val largo_lisp = (((5,6),(987,354)),((76,32),(5654,456))) let if x == 1 end val y = 'Hola mundo' val er = 34 + r val palabras = ['sfs','fsdof'] val letras = ['g','s','a'] val z = True val n = [1,2,3] if x>3")
+a = Lector.new(["Estas son la valiables"],"fun x(lista:int list) = val r = 16 + 7 val largo_lisp = (((5,6),(9+9,354)),((76,32),(5654,456))) let if x == 1 end val y = 'Hola mundo' val er = 34 + r val z = true val n = [1,2,3] if x>3")
 a.busca_variables()

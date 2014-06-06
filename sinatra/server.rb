@@ -18,18 +18,13 @@ get "/resultados" do
   haml :resultados, :locals => {:resultados => listaElem}
 end
     
+
 # Handle POST-request (Receive and save the uploaded file)
-post '/analizar' do
-  unless params[:file] &&
-         (tmpfile = params[:file][:tempfile]) &&
-         (name = params[:file][:filename])
-    @error = "No file selected"
-    #return haml(:upload)
+post "/analizar" do 
+  File.open('uploads/' + params['file'][:filename], "w") do |f|
+    f.write(params['file'][:tempfile].read)
   end
-  STDERR.puts "Uploading file, original name #{name.inspect}"
-  while blk = tmpfile.read(65536)
-    # here you would write it to its final location
-    STDERR.puts blk.inspect
-  end
-  return "el archivo "+name+" ha sido cargado exitosamente"
+  name= params['file'][:filename]
+  return "The file #{name} was successfully uploaded!"
 end
+

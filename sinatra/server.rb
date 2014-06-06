@@ -14,7 +14,8 @@ get "/analizar" do
 end
 
 get "/resultados" do
-	haml :resultados
+	listaElem = [["X","3","int"],["S","3.45","float"],["tuplis","(5,7)","int*int"],["lista","[6,8,7,4,3]","int list"]]
+  haml :resultados, :locals => {:resultados => listaElem}
 end
     
 # Handle POST-request (Receive and save the uploaded file)

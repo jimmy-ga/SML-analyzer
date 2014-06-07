@@ -25,6 +25,6 @@ post "/analizar" do
     f.write(params['file'][:tempfile].read)
   end
   name= params['file'][:filename]
-  return "The file #{name} was successfully uploaded!"
+  return redirect "/resultados"
 end
 

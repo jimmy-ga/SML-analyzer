@@ -1,9 +1,11 @@
+require 'find'
 $indice = 0
 class Lector
 	@@abc = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 	@@lista_ns = ['1','2','3','4','5','6','7','8','9','0','+','-','/','*']
 	@@lista_var = []
-	@@tabla_simbolos=[]
+	@@tabla_simbolos=[] #lista que contiene los valores finales evaluados
+	@@tabla_final=[]
 	
 	def initialize(lista,str) #constructor que tiene el codigo y lista con variables
 		@lista = lista
@@ -101,8 +103,8 @@ class Lector
 		variable
 	end
 
-	def busca_variables() #Busca todas las variables de un codigo y las mete en el atributo lista
-		codigo = @str #@str es el codigo SML que contiene el objeto
+		def busca_variables() #Busca todas las variables de un codigo y las mete en el atributo lista
+		codigo = @str + " x <3"#@str es el codigo SML que contiene el objeto
 		variable = '' #aqui se almacena la varible temporalmente para despues meterla a la lista
 		largo_str = codigo.length #largo del codigo restante
 		while largo_str > 0 and codigo.index('val') do  #codigo.index determina si existe el string "var", si existe devuelve el indice donde se encuentra, sino devuelve nil
@@ -148,7 +150,26 @@ class Lector
 		#pruebaTipos(convierteLista("5 + 2.8989 / 34 - 99676 + 576567"))
 		#pruebaTipos(convierteLista("34 + r"))
 	end
-	def splitear(valor)
+
+#	def busca_variables(tira)
+#		tira2=tira.split
+#		#puts tira2.to_s
+#		tira3=[]
+#		temporal=[]
+#		for i in tira2
+##			temporal=[]
+#			if i.to_s=="val" or temporal!=[]
+#				tira3=tira3+temporal
+#				temporal=[]				
+#				temporal=temporal+[i]
+#			end
+#		end
+#		#puts "fin \n"
+#		#puts tira3.to_s
+#		ambientes(tira3)
+#	end
+
+	def splitear(valor)#separa un string con expresiones matematicas y espacios y las devuelve sin estos(ej.: 3 +4* 5 devuelve 3+4*5)
 		salida=[]
 		temp=""
 		contador=0
@@ -166,8 +187,7 @@ class Lector
 		return salida
 	end
 
-	def convierteLista(valor)
-		#lista= "5 + 2.8989 / 34 - 99676 + 576567".split
+	def convierteLista(valor) #
 		lista= valor.delete " " #borra los espacios en blanco
 		#metodo para split manteniendo los caracteres
 		lista=splitear(lista)
@@ -196,7 +216,7 @@ class Lector
 		return listares
 	end
 	
-	def pruebaTipos(lista)
+	def pruebaTipos(lista)#resuelve las expresiones matematicas de un string (ej.: 3+2 retorna 5)
 		contador=0
 		#puts lista
 		while lista[contador].nil? ==false do
@@ -231,8 +251,19 @@ class Lector
 		return lista[0]
 	end
 
-	def ambientes(lista)
-		lista_res = []
+	def get_tipo_lista(lista)
+		numeros= %w{1 2 3 4 5 6 7 8 9 0}
+		lista=lista.tr("[]","")
+		if  numeros.include?(lista[0])
+			return "Int list"
+		elsif lista[0].class==String and lista[0].length==1
+			return "Char list"
+		else
+			return "String list"
+		end
+		
+	end
+	def ambientes(lista) #funcion principal para obtener los valorres dinamicos y estaticos
 		for i in lista
 			actual=i.split
 			if actual[0]=="val"
@@ -247,15 +278,43 @@ class Lector
 				#puts valor[0].class.to_s
 				if  numeros.include?(valor[0])
 					#puts "antes: "+valor.to_s
-					valor=pruebaTipos(convierteLista(valor))
-					#puts "despues: "+valor.to_s
+					valor=pruebaTipos(convierteLista(valor))					
+					#puts "despues: "+valor.to_s+valor.class.to_s
 				end
-				@@tabla_simbolos=@@tabla_simbolos+[[variable,valor]]
-				lista_res = lista_res + [variable,valor.to_s]
+				@@tabla_simbolos=[]
+				if valor.class==Fixnum
+						@@tabla_simbolos=@@tabla_simbolos+[[variable,valor,"Int"]]
+				elsif valor.class==Float
+						@@tabla_simbolos=@@tabla_simbolos+[[variable,valor,"Float"]]
+				#puts valor
+				elsif valor.class==String
+						valor=valor.downcase
+						if valor=="true" or valor=="false"
+							@@tabla_simbolos=@@tabla_simbolos+[[variable,valor,"Boolean"]]
+							#puts "Variable: "+variable+" Valor: "+valor.to_s+" Tipo: Boolean"
+						elsif valor.start_with? "(" and valor.end_with? ")"
+							@@tabla_simbolos=@@tabla_simbolos+[[variable,valor,"Tupla"]]
+							#puts "Variable: "+variable+" Valor: "+valor.to_s+" Tipo: Tupla"
+						elsif valor.start_with? "["
+							tipo_lista=get_tipo_lista(valor)
+							@@tabla_simbolos=@@tabla_simbolos+[[variable.to_s,valor.to_s,tipo_lista.to_s]]
+							#puts "Variable: "+variable+" Valor: "+valor.to_s+" Tipo: "+tipo_lista
+						end
+						#puts @@tabla_simbolos.to_s
+				end
+				#for i in @@tabla_simbolos
+				#	puts "Variable: "+i[0].to_s+" Valor: "+i[1].to_s+" Tipo: "+i[2].to_s
+				#end
+				#puts @@tabla_simbolos.to_s
+				@@tabla_final=@@tabla_final+@@tabla_simbolos
+				#return @@tabla_simbolos
+				#@@tabla_simbolos=@@tabla_simbolos+[[variable,valor]]
+					#puts "Variable: "+variable+" Valor: "+valor.to_s+" Tipo: "+valor.class.to_s
 			end
 		end
-		lista_res
-	end
+	#puts @@tabla_final.to_s
+	return @@tabla_final
+	end	
 end
 
 class Separador
@@ -266,7 +325,23 @@ class Separador
 	end
 end
 
+def carga_archivo(nombre)	 
+		archivo=""
+		File.open('uploads/'+nombre.to_s, 'r') do |f1|
+			while linea = f1.gets
+				archivo.concat(linea)
+#				puts linea
+			end
+		end
+		#puts archivo
+		a=Lector.new(["Estas son la valiables"],archivo)
+		return a.busca_variables()
+#	puts archivo
+		#a = Lector.new("[variables]",archivo)
+		#a.busca_variables()
+end
 
+#carga_archivo("fichero.sml")
 #Es un ejemplo de codigo => "fun x(lista:int list) = val x = 9 val y = 10"
-#a = Lector.new(["Estas son la valiables"],"fun x(lista:int list) = val r = 5 + 45.5 val largo_lisp = (((5,6),(987,354)),((76,32),(5654,456))) let if x == 1 end val y = 'Hola mundo' val er = 34 + r val z = True val n = [1,2,3] if x>3")
-#a.busca_variables()
+#a = Lector.new(["Estas son la valiables"],"fun x(lista:int list) = val r = 16 + 7 val largo_lisp = (((5,6),(9+9,354)),((76,32),(5654,456))) let if x == 1 end val y = 'Hola mundo' val er = 34 + r val z = true val n = [1,2,3] if x>3")
+#puts a.busca_variables()

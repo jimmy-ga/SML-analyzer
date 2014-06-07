@@ -1,6 +1,9 @@
 require 'rubygems'
 require 'sinatra'
 require 'haml' 
+require "./Lector.rb" 
+
+listaElem =[]
 
 set :bind, '0.0.0.0'
 #El index de la página
@@ -14,7 +17,7 @@ get "/analizar" do
 end
 
 get "/resultados" do
-	listaElem = [["X","3","int"],["S","3.45","float"],["tuplis","(5,7)","int*int"],["lista","[6,8,7,4,3]","int list"]]
+	#listaElem = [["X","3","int"],["S","3.45","float"],["tuplis","(5,7)","int*int"],["lista","[6,8,7,4,3]","int list"]]
   haml :resultados, :locals => {:resultados => listaElem}
 end
     
@@ -25,6 +28,9 @@ post "/analizar" do
     f.write(params['file'][:tempfile].read)
   end
   name= params['file'][:filename]
+	#puts "PRUEBA DE SUBIDA" + name.to_s
+	listaElem=carga_archivo(name.to_s)
+	#puts listaElem
   return redirect "/resultados"
 end
 

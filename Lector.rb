@@ -314,7 +314,8 @@ def carga_archivo(nombre)
 		a.busca_variables()
 end
 
+carga_archivo()
 #carga_archivo(2)
 #Es un ejemplo de codigo => "fun x(lista:int list) = val x = 9 val y = 10"
-a = Lector.new(["Estas son la valiables"],"fun x(lista:int list) = val r = 16 + 7 val largo_lisp = (((5,6),(9+9,354)),((76,32),(5654,456))) let if x == 1 end val y = 'Hola mundo' val er = 34 + r val z = true val n = [1,2,3] if x>3")
-a.busca_variables()
+#a = Lector.new(["Estas son la valiables"],"fun x(lista:int list) = val r = 16 + 7 val largo_lisp = (((5,6),(9+9,354)),((76,32),(5654,456))) let if x == 1 end val y = 'Hola mundo' val er = 34 + r val z = true val n = [1,2,3] if x>3")
+#a.busca_variables()
